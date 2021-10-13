@@ -1,0 +1,8 @@
+{
+    // Try to limit your line length to <= 120 characters
+    "editor.rulers": [120],
+    // VSCode autocomplete is pesky in Markdown; disable it
+    "[markdown]": {
+        "editor.quickSuggestions": false
+    }
+}

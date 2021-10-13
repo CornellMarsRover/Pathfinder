@@ -1,0 +1,3 @@
+#!/usr/bin/env bash
+
+xauth nlist $DISPLAY | sed -e 's/^..../ffff/' | xauth -f $1 nmerge -
