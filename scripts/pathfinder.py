@@ -7,7 +7,8 @@ import docker
 import subprocess
 import sys
 from pathlib import Path
-from os import getuid, path
+from os import getuid, path, environ
+from sys import platform
 
 # TODO: Make it run the Pathfinder container (or create one if it doesn't exist) and then pass it onto the CLI.
 
@@ -50,7 +51,7 @@ def create_container(docker_client):
     # The double braces so that they are escaped, as this is the same
     # format as a Python 3 format string
     env["XAUTHORITY"] = str(XAUTH)
-    env["DISPLAY"] = "host.docker.internal:0"
+    env["DISPLAY"] = "host.docker.internal:0" if platform == "darwin" else environ.get('DISPLAY')
     env["QT_X11_NO_MITSHM"] = "1"
 
     return docker_client.containers.run(
@@ -72,14 +73,13 @@ def boot_docker(args):
         print("To install the Docker daemon: https://docs.docker.com/get-docker/")
         return
 
-    # List all the containers that are running our Pathfinder image, if any.
+    # List all the running containers that are running our Pathfinder image, if any.
     candidates = docker_client.containers.list(filters={"ancestor": "cornellmarsrover/pathfinder"})
     if len(candidates) == 0:
         # There are no containers on the system that run our image.
         candidates = [create_container(docker_client=docker_client)]
 
-    # At this point, we have some containers to run on, but we need to make sure we pick one that's actually running.
-    # container = next(filter(lambda c: c.status == "running", candidates), None)
+    # At this point, we have at least one running container to run on.
     container = candidates[0]
 
     cmd = ["docker", "exec", "-u", str(getuid()), "-it", container.id, 

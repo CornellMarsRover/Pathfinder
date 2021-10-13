@@ -16,7 +16,8 @@ APT_PACKAGES=(\
     git \
     vim \
     ninja-build \
-    wget)
+    wget \
+    x11-apps)
 
 apt-get update
 apt-get install -y "${APT_PACKAGES[@]}"
