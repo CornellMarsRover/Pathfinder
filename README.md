@@ -1,7 +1,5 @@
 ![Pathfinder Logo](assets/PathfinderLogo.png)
 
-The CMR Controls Software training project.
-
 ## Forward
 
 In December of 1996, the world watched as the Mars Pathfinder spacecraft began its long journey to the red planet. It 
