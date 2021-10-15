@@ -1,4 +1,4 @@
-# This file is the entrypoint into the Pathfinder CLI.
+# This file is the entrypoint into the Pathfinder Shell.
 # It's responsible for first ensuring that we're running inside the Docker container before passing on the
 # input to the CLI commands, which you'll define in cli.py. If we're not running ignside the Docker container,
 # we'll run one and enter it. We're implementing our CLI like this because it's very similar to the CMR CLI.
@@ -34,7 +34,7 @@ def create_container(docker_client):
         the Container object for the new container.
     '''
 
-    volumes = [f'{path.join(PATHFINDER_DIR)}:/Pathfinder']
+    volumes = [f'{path.abspath(PATHFINDER_DIR)}:/Pathfinder']
     env = dict(LOCAL_USER_ID=getuid())
 
     # Set up XForwarding
@@ -47,11 +47,12 @@ def create_container(docker_client):
 
     volumes += ["{0}:{0}:rw".format(XAUTH)]
     volumes += ["{0}:{0}:rw".format(XSOCK)]
+    volumes += ["/home/vagrant/.Xauthority:/root/.Xauthority:rw"]
 
     # The double braces so that they are escaped, as this is the same
     # format as a Python 3 format string
     env["XAUTHORITY"] = str(XAUTH)
-    env["DISPLAY"] = "host.docker.internal:0" if platform == "darwin" else environ.get('DISPLAY')
+    env["DISPLAY"] = environ.get("DISPLAY")
     env["QT_X11_NO_MITSHM"] = "1"
 
     return docker_client.containers.run(
@@ -60,6 +61,7 @@ def create_container(docker_client):
         tty=True, 
         detach=True,
         volumes=volumes,
+        network_mode="host",
         environment=env)
 
 

@@ -23,7 +23,8 @@ training project.
 
 Welcome to Cornell Mars Rover's controls software subteam. Our primary goal is to design and deliver a robust, fault 
 tolerant, and intuitive rover controls system. We work with a few different technologies to achieve this. During the 
-first part of your training, you got an overview of the Controls Software System Architecture. Now, let's put what you 
-learned into practice by building your own virtual rover! 
+first part of your training, you got an overview of the Controls Software System Architecture. Now, let's get some 
+hands-on experience by building your own virtual robotic turtle!
 
-This project is a simplified replica of the sort of concepts and tools you'll use often on our subteam. 
+This project is a simplified replica of the sort of concepts and tools you'll use often on our subteam. To get started,
+head over to the Wiki page!

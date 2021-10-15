@@ -294,3 +294,6 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
+
+### Vagrant ###
+.vagrant/
