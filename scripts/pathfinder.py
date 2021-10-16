@@ -1,7 +1,7 @@
 # This file is the entrypoint into the Pathfinder Shell.
-# It's responsible for first ensuring that we're running inside the Docker container before passing on the
-# input to the CLI commands, which you'll define in cli.py. If we're not running ignside the Docker container,
-# we'll run one and enter it. We're implementing our CLI like this because it's very similar to the CMR CLI.
+# It'll start up a Docker container with a bash session.
+# The container is set up with X11 forwarding, has the "/Pathfinder" directory mapped to
+# the project directory, and will automatically remove itself and its volumes upon termination.
 
 import docker
 import subprocess
@@ -9,8 +9,6 @@ import sys
 from pathlib import Path
 from os import getuid, path, environ
 from sys import platform
-
-# TODO: Make it run the Pathfinder container (or create one if it doesn't exist) and then pass it onto the CLI.
 
 PATHFINDER_DIR = path.join(path.dirname(path.realpath(__file__)), "..")
 
@@ -23,19 +21,9 @@ def running_in_docker():
     return path.isfile('/.dockerenv')
 
 
-def create_container(docker_client):
-    '''
-    Creates a container running the "cornellmarsrover/pathfinder" image.
-
-    Args:
-        docker_client: DockerClient instance to use
-
-    Returns:
-        the Container object for the new container.
-    '''
-
-    volumes = [f'{path.abspath(PATHFINDER_DIR)}:/Pathfinder']
-    env = dict(LOCAL_USER_ID=getuid())
+def boot_docker(args):
+    volumes = []
+    volumes += ['-v', f'{path.abspath(PATHFINDER_DIR)}:/Pathfinder']
 
     # Set up XForwarding
     XSOCK = Path("/tmp/.X11-unix")
@@ -45,47 +33,24 @@ def create_container(docker_client):
     cmd = path.join(PATHFINDER_DIR, 'scripts', 'cmr-xauth-config')
     subprocess.check_call([cmd, str(XAUTH)])
 
-    volumes += ["{0}:{0}:rw".format(XAUTH)]
-    volumes += ["{0}:{0}:rw".format(XSOCK)]
-    volumes += ["/home/vagrant/.Xauthority:/root/.Xauthority:rw"]
+    volumes += ['-v', "{0}:{0}:rw".format(XAUTH)]
+    volumes += ['-v', "{0}:{0}:rw".format(XSOCK)]
+    volumes += ['-v', "/home/vagrant/.Xauthority:/home/cmr/.Xauthority:rw"]
 
-    # The double braces so that they are escaped, as this is the same
-    # format as a Python 3 format string
-    env["XAUTHORITY"] = str(XAUTH)
-    env["DISPLAY"] = environ.get("DISPLAY")
-    env["QT_X11_NO_MITSHM"] = "1"
+    env = []
+    env += ["--env", "LOCAL_USER_ID=" + str(getuid())]
+    env += ["--env", "XAUTH=" + str(XAUTH)]
+    env += ["--env", "DISPLAY=" + environ.get("DISPLAY")]
+    env += ["--env", "QT_X11_NO_MITSHM=1"]
 
-    return docker_client.containers.run(
-        "cornellmarsrover/pathfinder", 
-        command=['tail', '-f', '/dev/null'], 
-        tty=True, 
-        detach=True,
-        volumes=volumes,
-        network_mode="host",
-        environment=env)
+    cmd = ["docker", "run", "--rm"]
+    cmd += volumes
+    cmd += ['--net', 'host']
+    cmd += env
+    cmd += ['-it']
+    cmd += ['cornellmarsrover/pathfinder']
+    cmd += ['bash']
 
-
-def boot_docker(args):
-    # docker_client is how we interact with the running Docker daemon
-    docker_client = None
-    try:
-        docker_client = docker.from_env()
-    except:
-        print("❌  Make sure you have a Docker daemon running first.")
-        print("To install the Docker daemon: https://docs.docker.com/get-docker/")
-        return
-
-    # List all the running containers that are running our Pathfinder image, if any.
-    candidates = docker_client.containers.list(filters={"ancestor": "cornellmarsrover/pathfinder"})
-    if len(candidates) == 0:
-        # There are no containers on the system that run our image.
-        candidates = [create_container(docker_client=docker_client)]
-
-    # At this point, we have at least one running container to run on.
-    container = candidates[0]
-
-    cmd = ["docker", "exec", "-u", str(getuid()), "-it", container.id, 
-        "bash"]
     subprocess.check_call(cmd, universal_newlines=True)
 
 

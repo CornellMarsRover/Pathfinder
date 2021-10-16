@@ -1,0 +1,3 @@
+#!/bin/bash
+
+vagrant ssh -- -t "python3 /Pathfinder/scripts/pathfinder.py"

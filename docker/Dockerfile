@@ -19,4 +19,4 @@ RUN chmod u+x install_deps.sh && ./install_deps.sh
 COPY entrypoint.sh /usr/local/bin/entrypoint.sh
 
 WORKDIR ${WS}
-ENTRYPOINT ["/usr/local/bin/entrypoint.sh"]
+ENTRYPOINT ["sh", "/usr/local/bin/entrypoint.sh"]

@@ -32,7 +32,7 @@ chmod +x /usr/local/bin/gosu
 
 # Install Python packages.
 
-pip3 install docker click
+pip3 install click
 
 # Install ROS.
 # This follows the instructions from the setup article here: http://wiki.ros.org/melodic/Installation/Ubuntu
