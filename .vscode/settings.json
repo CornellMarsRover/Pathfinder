@@ -4,5 +4,5 @@
     // VSCode autocomplete is pesky in Markdown; disable it
     "[markdown]": {
         "editor.quickSuggestions": false
-    }
+    },
 }

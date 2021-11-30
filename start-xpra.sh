@@ -1,0 +1,2 @@
+BASEDIR=$(dirname "$0")
+xpra attach --ssh="ssh -p 2222 -o StrictHostKeyChecking=no -o PasswordAuthentication=no -o IdentityFile=${BASEDIR}/.vagrant/machines/pathfinder/vmware_fusion/private_key" ssh:vagrant@localhost:0

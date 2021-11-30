@@ -3,12 +3,10 @@
 # The container is set up with X11 forwarding, has the "/Pathfinder" directory mapped to
 # the project directory, and will automatically remove itself and its volumes upon termination.
 
-import docker
 import subprocess
 import sys
 from pathlib import Path
 from os import getuid, path, environ
-from sys import platform
 
 PATHFINDER_DIR = path.join(path.dirname(path.realpath(__file__)), "..")
 

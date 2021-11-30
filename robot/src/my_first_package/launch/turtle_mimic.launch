@@ -1,0 +1,21 @@
+<launch>
+
+  <!-- Here, we'll start two turtlesims named "turtlesim1" and "turtlesim2". -->
+  <!-- The ns (namespace) attribute lets us run two of the same node without naming conflicts. -->
+  <group ns="turtlesim1">
+    <node pkg="turtlesim" name="sim" type="turtlesim_node"/>
+  </group>
+
+  <group ns="turtlesim2">
+    <node pkg="turtlesim" name="sim" type="turtlesim_node"/>
+  </group>
+
+  <!-- This will run the "mimic" node from the "turtlesim" package. -->
+  <!-- It's a built-in node that comes with the turtle simulator. -->
+  <node pkg="turtlesim" name="mimic" type="mimic">
+    <remap from="input" to="turtlesim1/turtle1"/>
+    <remap from="output" to="turtlesim2/turtle1"/>
+  </node>
+
+</launch>
+
