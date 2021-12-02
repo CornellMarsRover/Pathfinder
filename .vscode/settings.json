@@ -5,4 +5,5 @@
     "[markdown]": {
         "editor.quickSuggestions": false
     },
+    "ros.distro": "melodic",
 }

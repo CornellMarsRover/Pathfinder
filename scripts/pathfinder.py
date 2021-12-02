@@ -25,7 +25,7 @@ def boot_docker(args):
 
     # Set up XForwarding
     XSOCK = Path("/tmp/.X11-unix")
-    XAUTH = Path("/tmp/.docker.xauth")
+    XAUTH = Path("/tmp/.docker-{0}.xauth".format(getuid()))
 
     XAUTH.touch()
     cmd = path.join(PATHFINDER_DIR, 'scripts', 'cmr-xauth-config')
@@ -37,7 +37,7 @@ def boot_docker(args):
 
     env = []
     env += ["--env", "LOCAL_USER_ID=" + str(getuid())]
-    env += ["--env", "XAUTH=" + str(XAUTH)]
+    env += ["--env", "XAUTHORITY=" + str(XAUTH)]
     env += ["--env", "DISPLAY=" + environ.get("DISPLAY")]
     env += ["--env", "QT_X11_NO_MITSHM=1"]
 

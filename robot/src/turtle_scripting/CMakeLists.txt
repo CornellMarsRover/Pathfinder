@@ -10,7 +10,7 @@ project(turtle_scripting)
 find_package(catkin REQUIRED COMPONENTS
   roscpp
   rospy
-  stdmsgs
+  std_msgs
 )
 
 ## System dependencies are found with CMake's conventions
