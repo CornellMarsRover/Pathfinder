@@ -6,4 +6,8 @@
         "editor.quickSuggestions": false
     },
     "ros.distro": "melodic",
+    "python.defaultInterpreterPath": "/usr/bin/python",
+    "python.autoComplete.extraPaths": [
+        "/opt/ros/melodic/lib/python2.7/dist-packages"
+    ],
 }
