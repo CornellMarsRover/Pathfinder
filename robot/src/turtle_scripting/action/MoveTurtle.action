@@ -1,0 +1,9 @@
+# goal
+string script_path
+---
+# result
+bool success
+---
+# feedback
+int32 step
+float32[] position

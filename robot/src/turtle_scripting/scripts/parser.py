@@ -2,6 +2,8 @@
 import rospy 
 
 def main():
+    # Initialize this node with ROS.
+    rospy.init_node('turtle_scripting')
     # TODO: Do stuff here
     pass
 
